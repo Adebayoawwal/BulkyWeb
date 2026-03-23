@@ -35,9 +35,11 @@ namespace BulkyWeb.Controllers
             if (ModelState.IsValid)
             {
                 _db.Categories.Add(obj);
+                TempData["success"] = "Category is created successfully";
                 _db.SaveChanges();
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index"  );
+            return View();
         }
         public IActionResult Edit(int? id)
         {
@@ -46,9 +48,6 @@ namespace BulkyWeb.Controllers
                 return NotFound();
             }
             Catergory? catergoryFromDb = _db.Categories.Find(id);
-            //Catergory? catergoryFromDb1 = _db.Categories.FirstOrDefault(u=>u.Id==id);
-            //Catergory? catergoryFromDb2 = _db.Categories.Where(u=>u.Id==id).FirstOrDefault();
-
             if (catergoryFromDb == null)
             {
                 return NotFound();
@@ -69,10 +68,13 @@ namespace BulkyWeb.Controllers
             if (ModelState.IsValid)
             {
                 _db.Categories.Update(obj);
+                TempData["success"] = "Category is updated successfully";
                 _db.SaveChanges();
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            return View();
         }
+        [HttpGet]
         public IActionResult Delete(int? id)
         {
             if (id == null || id == 0)
@@ -89,14 +91,17 @@ namespace BulkyWeb.Controllers
             }
             return View(catergoryFromDb);
         }
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            if (ModelState.IsValid)
-            {
-                _db.Categories.Update(obj);
-                _db.SaveChanges();
+            Catergory obj=_db.Categories.Find(id);
+            if (obj == null) { 
+                return NotFound();
             }
+            _db.Categories.Remove(obj);
+            _db.SaveChanges();
+            TempData["success"] = "Category is deleted successfully";
             return RedirectToAction("Index");
         }
     }
