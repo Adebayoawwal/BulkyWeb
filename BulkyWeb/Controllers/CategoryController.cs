@@ -1,5 +1,5 @@
-﻿using BulkyWeb.Data;
-using BulkyWeb.Models;
+﻿using BulkyDataAccess;
+using BulkyWebModels.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -14,7 +14,7 @@ namespace BulkyWeb.Controllers
 
         public IActionResult Index()
         {
-            List<Catergory> objCategoryList = _db.Categories.ToList();
+            List<Category> objCategoryList = _db.Categories.ToList();
             return View(objCategoryList);
         }
         public IActionResult Create()
@@ -22,9 +22,9 @@ namespace BulkyWeb.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Catergory obj)
+        public IActionResult Create(Category obj)
         {
-            if(obj.Name == obj.DiplayOrder.ToString())
+            if(obj.Name == obj.DisplayOrder.ToString())
             {
                 ModelState.AddModelError("name", "The DisplayOrder cannot exactly watch the Name.");
             }
@@ -35,9 +35,11 @@ namespace BulkyWeb.Controllers
             if (ModelState.IsValid)
             {
                 _db.Categories.Add(obj);
+                TempData["success"] = "Category is created successfully";
                 _db.SaveChanges();
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index"  );
+            return View();
         }
         public IActionResult Edit(int? id)
         {
@@ -45,10 +47,7 @@ namespace BulkyWeb.Controllers
             {
                 return NotFound();
             }
-            Catergory? catergoryFromDb = _db.Categories.Find(id);
-            //Catergory? catergoryFromDb1 = _db.Categories.FirstOrDefault(u=>u.Id==id);
-            //Catergory? catergoryFromDb2 = _db.Categories.Where(u=>u.Id==id).FirstOrDefault();
-
+            Category? catergoryFromDb = _db.Categories.Find(id);
             if (catergoryFromDb == null)
             {
                 return NotFound();
@@ -56,9 +55,9 @@ namespace BulkyWeb.Controllers
             return View(catergoryFromDb);
         }
         [HttpPost]
-        public IActionResult Edit(Catergory obj)
+        public IActionResult Edit(Category obj)
         {
-            if (obj.Name == obj.DiplayOrder.ToString())
+            if (obj.Name == obj.DisplayOrder.ToString())
             {
                 ModelState.AddModelError("name", "The DisplayOrder cannot exactly watch the Name.");
             }
@@ -69,17 +68,20 @@ namespace BulkyWeb.Controllers
             if (ModelState.IsValid)
             {
                 _db.Categories.Update(obj);
+                TempData["success"] = "Category is updated successfully";
                 _db.SaveChanges();
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            return View();
         }
+        [HttpGet]
         public IActionResult Delete(int? id)
         {
             if (id == null || id == 0)
             {
                 return NotFound();
             }
-            Catergory? catergoryFromDb = _db.Categories.Find(id);
+            Category? catergoryFromDb = _db.Categories.Find(id);
             //Catergory? catergoryFromDb1 = _db.Categories.FirstOrDefault(u=>u.Id==id);
             //Catergory? catergoryFromDb2 = _db.Categories.Where(u=>u.Id==id).FirstOrDefault();
 
@@ -89,14 +91,17 @@ namespace BulkyWeb.Controllers
             }
             return View(catergoryFromDb);
         }
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            if (ModelState.IsValid)
-            {
-                _db.Categories.Update(obj);
-                _db.SaveChanges();
+            Category obj=_db.Categories.Find(id);
+            if (obj == null) { 
+                return NotFound();
             }
+            _db.Categories.Remove(obj);
+            _db.SaveChanges();
+            TempData["success"] = "Category is deleted successfully";
             return RedirectToAction("Index");
         }
     }
