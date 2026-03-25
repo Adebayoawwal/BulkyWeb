@@ -1,5 +1,5 @@
-﻿using BulkyWeb.Data;
-using BulkyWeb.Models;
+﻿using BulkyDataAccess;
+using BulkyWebModels.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -14,7 +14,7 @@ namespace BulkyWeb.Controllers
 
         public IActionResult Index()
         {
-            List<Catergory> objCategoryList = _db.Categories.ToList();
+            List<Category> objCategoryList = _db.Categories.ToList();
             return View(objCategoryList);
         }
         public IActionResult Create()
@@ -22,9 +22,9 @@ namespace BulkyWeb.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Catergory obj)
+        public IActionResult Create(Category obj)
         {
-            if(obj.Name == obj.DiplayOrder.ToString())
+            if(obj.Name == obj.DisplayOrder.ToString())
             {
                 ModelState.AddModelError("name", "The DisplayOrder cannot exactly watch the Name.");
             }
@@ -47,7 +47,7 @@ namespace BulkyWeb.Controllers
             {
                 return NotFound();
             }
-            Catergory? catergoryFromDb = _db.Categories.Find(id);
+            Category? catergoryFromDb = _db.Categories.Find(id);
             if (catergoryFromDb == null)
             {
                 return NotFound();
@@ -55,9 +55,9 @@ namespace BulkyWeb.Controllers
             return View(catergoryFromDb);
         }
         [HttpPost]
-        public IActionResult Edit(Catergory obj)
+        public IActionResult Edit(Category obj)
         {
-            if (obj.Name == obj.DiplayOrder.ToString())
+            if (obj.Name == obj.DisplayOrder.ToString())
             {
                 ModelState.AddModelError("name", "The DisplayOrder cannot exactly watch the Name.");
             }
@@ -81,7 +81,7 @@ namespace BulkyWeb.Controllers
             {
                 return NotFound();
             }
-            Catergory? catergoryFromDb = _db.Categories.Find(id);
+            Category? catergoryFromDb = _db.Categories.Find(id);
             //Catergory? catergoryFromDb1 = _db.Categories.FirstOrDefault(u=>u.Id==id);
             //Catergory? catergoryFromDb2 = _db.Categories.Where(u=>u.Id==id).FirstOrDefault();
 
@@ -95,7 +95,7 @@ namespace BulkyWeb.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            Catergory obj=_db.Categories.Find(id);
+            Category obj=_db.Categories.Find(id);
             if (obj == null) { 
                 return NotFound();
             }

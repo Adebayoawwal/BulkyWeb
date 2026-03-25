@@ -22,12 +22,12 @@ namespace BulkyWebRazor_Temp.Pages.Categories
         }
         public IActionResult OnPost()
         {
-            Category? obj=_db.Categories.Find(Category.Id);
-            if (Category == null) 
-            { 
+            Category? obj = _db.Categories.Find(Category.Id);
+            if (Category == null)
+            {
                 return NotFound();
             }
-           _db.Categories.Update(Category);
+            _db.Categories.Remove(Category);
            _db.SaveChanges();
            return RedirectToPage("Index");
         }
