@@ -1,4 +1,5 @@
 ﻿using BulkyDataAccess.Repositry.IRepositry;
+using BulkyModels.Models;
 using BulkyWebModels.Models;
 using System;
 using System.Collections.Generic;
@@ -9,17 +10,17 @@ using System.Threading.Tasks;
 
 namespace BulkyDataAccess.Repositry
 {
-    public class CategoryRepository : Repositry<Category>,ICategoryRepositry
+    public class ProductRepositry : Repositry<Product>, IProductRepositry
     {
         private ApplicationDbContext _db;
-        public CategoryRepository(ApplicationDbContext db):base(db) 
+        public ProductRepositry(ApplicationDbContext db):base(db) 
         {
             _db = db;
         }
 
-        public void Update(Category category)
+        public void Update(Product category)
         {
-            _db.Categories.Update(category);
+            _db.Products.Update(category);
         }
     }
 }

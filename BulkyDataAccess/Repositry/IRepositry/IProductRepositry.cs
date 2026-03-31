@@ -1,4 +1,5 @@
-﻿using BulkyWebModels.Models;
+﻿using BulkyModels.Models;
+using BulkyWebModels.Models;
 using NuGet.Packaging.Core;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace BulkyDataAccess.Repositry.IRepositry
 {
-    public interface ICategoryRepositry :IRepostiry<Category>
+    public interface IProductRepositry :IRepostiry<Product>
     {
-        void Update(Category category);
+        void Update(Product category);
     }
 }
