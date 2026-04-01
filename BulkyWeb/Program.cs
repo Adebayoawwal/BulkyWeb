@@ -27,8 +27,10 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 
+// 1️⃣ Area-specific route (for Admin, Customer, etc.)
 app.MapControllerRoute(
     name: "default",
-    pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}"
+);
 
 app.Run();
