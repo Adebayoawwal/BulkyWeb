@@ -16,6 +16,11 @@
                     <input asp-for="Title" disabled type="text" class="form-control border-0 shadow" />
                     <label asp-for="Title" class="ms-2">Product Name</label>
                 </div>
+                <div class="form-floating py-3 col-12">
+                    <textarea asp-for="Description" type="text" class="form-control border-0 shadow"></textarea>
+                    <label asp-for="Description" class="ms-2">Product Name</label>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
                 <div class="mb-3 row p-1">
                     <label asp-for="ISBN" disabled class="ms-2"></label>
                     <input asp-for="ISBN" type="text" class="form-control border-0 shadow" />
