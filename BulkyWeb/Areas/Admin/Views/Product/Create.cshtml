@@ -52,6 +52,17 @@
                     <input asp-for="Price100" type="text" class="form-control border-0 shadow" />
                     <span asp-validation-for="Price100" class="text-danger"></span>
                 </div>
+                <div class="mb-3 row p-1">
+                    <label asp-for="CategoryId" class="ms-2"></label>
+                    <select asp-for="CategoryId" asp-items="ViewBag.CategoryList" type="text" class="form-select border-0 shadow">
+                        <option disabled selected value="">Select Category</option>
+                        @foreach (var category in ViewBag.Categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
                 <div class="row">
                     <div class="col-6 col-mb-3">
                         <button type="submit" class="btn btn-primary form-control">Create</button>
