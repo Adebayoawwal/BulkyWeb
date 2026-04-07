@@ -53,6 +53,11 @@
                     <span asp-validation-for="Product.Price100" class="text-danger"></span>
                 </div>
                 <div class="mb-3 row p-1">
+                    <label asp-for="Product.ImageUrl" class="ms-2"></label>
+                    <input asp-for="Product.ImageUrl" type="text" class="form-control border-0 shadow" />
+                    <span asp-validation-for="Product.ImageUrl" class="text-danger"></span>
+                </div>
+                <div class="mb-3 row p-1">
                     <label asp-for="Product.CategoryId" class="ms-2"></label>
                     <select asp-for="Product.CategoryId" asp-items="@Model.CategoryList" type="text" class="form-select border-0 shadow">
                         <option disabled selected value="">Select Category</option>

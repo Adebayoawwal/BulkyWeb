@@ -1,6 +1,7 @@
 ﻿using BulkyDataAccess;
 using BulkyDataAccess.Repositry.IRepositry;
 using BulkyModels.Models;
+using BulkyModels.ViewModels;
 using BulkyWebModels.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -28,21 +29,37 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 Text = u.Name,
                 Value = u.Id.ToString()
             });
-            //ViewBag.CategoryList = CategoryList;
-            ViewData["CategoryList"]= CategoryList;
-            return View();
+            ProductVM productVM = new ProductVM ()
+            {
+                Product = new Product(),
+                CategoryList = CategoryList
+            };
+            return View(productVM);
         }
         [HttpPost]
-        public IActionResult Create(Product obj)
+        public IActionResult Create(ProductVM obj)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Product.Add(obj);
+                _unitOfWork.Product.Add(obj.Product);
                 TempData["success"] = "Category is created successfully";
                 _unitOfWork.Save();
                 return RedirectToAction("Index");
             }
-            return View();
+            else
+            {
+                IEnumerable<SelectListItem> CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                });
+                ProductVM productVM = new ProductVM()
+                {
+                    Product = new Product(),
+                    CategoryList = CategoryList
+                };
+                return View(productVM);
+            }
         }
         public IActionResult Edit(int? id)
         {
