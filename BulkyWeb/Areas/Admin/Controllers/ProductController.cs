@@ -22,7 +22,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
             List<Product> objCategoryList = _unitOfWork.Product.GetAll().ToList();
             return View(objCategoryList);
         }
-        public IActionResult Create() 
+        public IActionResult Upsert(int? Id) 
         {
             IEnumerable<SelectListItem> CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
             {
@@ -34,10 +34,20 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 Product = new Product(),
                 CategoryList = CategoryList
             };
-            return View(productVM);
+            if(Id==null || Id == 0)
+            {
+                //create
+                 return View(productVM);
+            }
+            else
+            {
+                //update
+                productVM.Product = _unitOfWork.Product.Get(u => u.Id == Id);
+                 return View(productVM);
+            }
         }
         [HttpPost]
-        public IActionResult Create(ProductVM obj)
+        public IActionResult Upsert(ProductVM obj,IFormFile? file)
         {
             if (ModelState.IsValid)
             {
