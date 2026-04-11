@@ -14,7 +14,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public ProductController(IUnitOfWork db,IWebHostEnvironment webHostEnvironment) {
+        public ProductController(IUnitOfWork db, IWebHostEnvironment webHostEnvironment) {
             _unitOfWork = db;
             _webHostEnvironment = webHostEnvironment;
         }
@@ -24,28 +24,28 @@ namespace BulkyWeb.Areas.Admin.Controllers
             List<Product> objCategoryList = _unitOfWork.Product.GetAll().ToList();
             return View(objCategoryList);
         }
-        public IActionResult Upsert(int? Id) 
+        public IActionResult Upsert(int? Id)
         {
             IEnumerable<SelectListItem> CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
             {
                 Text = u.Name,
                 Value = u.Id.ToString()
             });
-            ProductVM productVM = new ProductVM ()
+            ProductVM productVM = new ProductVM()
             {
                 Product = new Product(),
                 CategoryList = CategoryList
             };
-            if(Id==null || Id == 0)
+            if (Id == null || Id == 0)
             {
                 //create
-                 return View(productVM);
+                return View(productVM);
             }
             else
             {
                 //update
                 productVM.Product = _unitOfWork.Product.Get(u => u.Id == Id);
-                 return View(productVM);
+                return View(productVM);
             }
         }
         [HttpPost]
@@ -61,36 +61,44 @@ namespace BulkyWeb.Areas.Admin.Controllers
                     if (!string.IsNullOrEmpty(obj.Product.ImageUrl))
                     {
                         var oldImagePath = Path.Combine(wwwRootPath, obj.Product.ImageUrl.TrimStart('\\'));
-                        if(System.IO.File.Exists(oldImagePath) )
+                        if (System.IO.File.Exists(oldImagePath))
                         {
                             System.IO.File.Delete(oldImagePath);
                         }
                     }
 
-                        using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
-                        {
-                            file.CopyTo(fileStream);
-                        }
-                        obj.Product.ImageUrl = @"\images\product\" + fileName;
+                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                    obj.Product.ImageUrl = @"\images\product\" + fileName;
+                }
+                if(obj.Product.Id == 0)
+                {
                     _unitOfWork.Product.Add(obj.Product);
-                    TempData["success"] = "Category is created successfully";
-                    _unitOfWork.Save();
-                    return RedirectToAction("Index");
                 }
                 else
                 {
-                    IEnumerable<SelectListItem> CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
-                    {
-                        Text = u.Name,
-                        Value = u.Id.ToString()
-                    });
-                    ProductVM productVM = new ProductVM()
-                    {
-                        Product = new Product(),
-                        CategoryList = CategoryList
-                    };
-                    return View(productVM);
+                    _unitOfWork.Product.Update(obj.Product);
                 }
+                _unitOfWork.Product.Add(obj.Product);
+                TempData["success"] = "Category is created successfully";
+                _unitOfWork.Save();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                IEnumerable<SelectListItem> CategoryList = _unitOfWork.Category.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString()
+                });
+                ProductVM productVM = new ProductVM()
+                {
+                    Product = new Product(),
+                    CategoryList = CategoryList
+                };
+                return View(productVM);
             }
         }
         public IActionResult Edit(int? id)
@@ -103,7 +111,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
             if (catergoryFromDb == null)
             {
                 return NotFound();
-            }
+                }
             return View(catergoryFromDb);
         }
         [HttpPost]
