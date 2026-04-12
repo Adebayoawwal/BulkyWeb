@@ -157,5 +157,13 @@ namespace BulkyWeb.Areas.Admin.Controllers
             TempData["success"] = "Category is deleted successfully";
             return RedirectToAction("Index");
         }
+        #region API CALLS
+        [HttpGet]
+        public IActionResult GetAll() {
+            List<Product> objCategoryList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
+            return Json(new { data = objCategoryList });
+
+        }
+        #endregion
     }
 }
