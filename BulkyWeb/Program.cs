@@ -15,13 +15,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     ));
 
 builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(); 
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
-{
+{  
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
@@ -31,11 +31,11 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapRazorPages();
 
 // 1️⃣ Area-specific route (for Admin, Customer, etc.)
 app.MapControllerRoute(
     name: "default",
-    pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}"
-);
+    pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
-app.Run();
+app.Run(); 
