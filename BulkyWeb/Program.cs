@@ -1,6 +1,9 @@
+using Bulky.Utility;
 using BulkyDataAccess;
-using BulkyDataAccess.Repositry.IRepositry;
 using BulkyDataAccess.Repositry;
+using BulkyDataAccess.Repositry.IRepositry;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,12 +15,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")
     ));
+
+builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
-{
+{  
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
@@ -25,12 +32,13 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
+app.MapRazorPages();
 
 // 1️⃣ Area-specific route (for Admin, Customer, etc.)
 app.MapControllerRoute(
     name: "default",
-    pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}"
-);
+    pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
-app.Run();
+app.Run(); 
