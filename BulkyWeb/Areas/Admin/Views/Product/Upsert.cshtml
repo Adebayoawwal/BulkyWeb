@@ -12,7 +12,7 @@
     <div class="card-body p-4">
         <form method="post" class="rows" enctype="multipart/form-data">
             <input asp-for="Product.Id" type="hidden" />
-            <input asp-for="Product.ImageUrl" type="hidden" />
+            <input asp-for="Product.ImageUrl"/>
             <div class="row">
                 <div class="col-10">
                     <div class="border p-3 mt-4">
@@ -55,10 +55,6 @@
                             <label asp-for="Product.Price100" class="ms-2"></label>
                             <input asp-for="Product.Price100" type="text" class="form-control border-0 shadow" />
                             <span asp-validation-for="Product.Price100" class="text-danger"></span>
-                        </div>
-                        <div class="mb-3 row p-1">
-                            <label asp-for="Product.ImageUrl" class="ms-2"></label>
-                            <input type="file" name="file" asp-for="Product.ImageUrl" type="text" class="form-control border-0 shadow" />
                         </div>
                         <div class="mb-3 row p-1">
                             <label asp-for="Product.CategoryId" class="ms-2"></label>
